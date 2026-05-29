@@ -55,9 +55,9 @@ Today, writing XMP into modern web image formats from JavaScript means one of:
 | --- | :---: | :---: | --- |
 | **WebP** | ✅ | ✅ | Implemented & tested (simple + extended) |
 | **AVIF** | ✅ | ✅ | Implemented & tested (ISOBMFF item + full `iloc` offset recalculation) |
+| **HEIC** | ✅ | ✅ | Implemented & tested (shares AVIF's ISOBMFF engine; validated against the Nokia HEIF conformance suite) |
 | **JPEG** | ✅ | ✅ | Implemented & tested (APP1 segment splice) |
 | **PNG** | ✅ | ✅ | Implemented & tested (standard `iTXt`, CRC-correct) |
-| **HEIC** | ✅ | — | Reads for free (same container as AVIF) |
 
 All four major web image formats are supported. An unrecognized format throws a typed `UnsupportedFormatError` rather than risking silent corruption. See [`docs/roadmap.md`](docs/roadmap.md).
 
@@ -111,7 +111,7 @@ const clean = removeMetadata(input); // removes XMP/EXIF, keeps pixels + ICC
 
 ```ts
 import { detectFormat } from "imagemeta";
-detectFormat(buf); // "webp" | "jpeg" | "png" | "avif" | "unknown"
+detectFormat(buf); // "webp" | "jpeg" | "png" | "avif" | "heic" | "unknown"
 ```
 
 ## API
@@ -152,7 +152,7 @@ The compressed image chunk is copied byte-for-byte.
 
 **JPEG** stores XMP in an `APP1` marker segment (signature `http://ns.adobe.com/xap/1.0/\0`); **PNG** uses a standard `iTXt` chunk (`XML:com.adobe.xmp`, CRC-32 recomputed). Both follow the same splice pattern — locate/replace the metadata block, copy everything else (including the entropy-coded scan / IDAT data) byte-for-byte.
 
-**AVIF** is harder: it's an [ISOBMFF](https://en.wikipedia.org/wiki/ISO_base_media_file_format) box tree where XMP is an *item* whose bytes are located via absolute file offsets in the `iloc` box. Inserting metadata shifts `mdat`, invalidating every offset — so `imagemeta` reads each item's bytes, emits a fresh `meta` (regenerated `iinf`/`iloc`/`iref`) and `mdat`, and recomputes all offsets from the new layout. The compressed image data is relocated verbatim (verified: decoded pixels are byte-identical before and after).
+**AVIF and HEIC** are harder: they're [ISOBMFF](https://en.wikipedia.org/wiki/ISO_base_media_file_format) box trees (same container, different codec) where XMP is an *item* whose bytes are located via absolute file offsets in the `iloc` box. Inserting metadata shifts `mdat`, invalidating every offset — so `imagemeta` reads each item's bytes, emits a fresh `meta` (regenerated `iinf`/`iloc`/`iref`) and `mdat`, and recomputes all offsets from the new layout. The compressed image data is relocated verbatim (verified: decoded pixels are byte-identical before and after). The same engine handles HEIC, and was validated against the full [Nokia HEIF conformance suite](https://github.com/nokiatech/heif_conformance) — including grid-tiled, overlay, thumbnail, and multi-item files.
 
 Read [`docs/architecture.md`](docs/architecture.md), [`docs/webp-format.md`](docs/webp-format.md), and [`docs/avif-format.md`](docs/avif-format.md) for the deep dives.
 

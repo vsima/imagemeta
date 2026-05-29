@@ -1,7 +1,7 @@
 # Roadmap
 
-v1 ships **WebP, AVIF, JPEG, and PNG** read/write/remove (plus HEIC read) — all
-four major web image formats. AVIF was built first because it's the hardest and
+v1 ships **WebP, AVIF, HEIC, JPEG, and PNG** read/write/remove — all the major
+web/device image formats. AVIF/HEIC (shared ISOBMFF engine) were the hardest and
 the project's differentiator. EXIF descriptive-tag write remains.
 
 ## Order & rationale
@@ -16,8 +16,13 @@ ISOBMFF box tree; XMP is a `mime` item located via `iloc`. Writing rebuilds
 so the compressed image relocates byte-for-byte. **HEIC read comes free** (same
 container). See [`avif-format.md`](avif-format.md).
 
-### ✅ HEIC — read (free with AVIF)
-Identical container; the AVIF reader handles it. Write not yet exposed.
+### ✅ HEIC — done (read + write + remove)
+Identical ISOBMFF container; the AVIF engine handles it (HEVC vs AV1 codec box is
+opaque to a metadata splice). Validated against the **Nokia HEIF conformance
+suite** (63 files): all single- and multi-item still images (grids, overlays,
+thumbnails, derived images, `idat`, Exif-present, up to 21 items) write and
+re-decode correctly. Image *sequences* (`msf1`/`heis`, no `meta` box) are
+refused cleanly — they store metadata in movie boxes and are out of scope.
 
 ### ✅ JPEG — done (read + write + remove)
 XMP in an `APP1` marker segment (`http://ns.adobe.com/xap/1.0/\0`). Header

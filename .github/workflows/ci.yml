@@ -83,3 +83,14 @@ jobs:
               && echo "✅ $fmt XMP round-trip verified by exiftool" \
               || (echo "❌ $fmt XMP not found by exiftool" && exit 1)
           done
+      - name: HEIC — write metadata, verify exiftool reads it back
+        run: |
+          node --input-type=module -e "
+          import { writeMetadata } from './src/index.ts';
+          import { readFileSync, writeFileSync } from 'node:fs';
+          const b = new Uint8Array(readFileSync('test/fixtures/sample.heic'));
+          writeFileSync('interop.heic', writeMetadata(b, { description: 'CI interop heic', keywords: ['ci'] }));
+          "
+          exiftool interop.heic | grep -q "CI interop heic" \
+            && echo "✅ HEIC XMP round-trip verified by exiftool" \
+            || (echo "❌ HEIC XMP not found by exiftool" && exit 1)

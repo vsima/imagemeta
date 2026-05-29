@@ -48,10 +48,11 @@ unoccupied, in any language.
   multi-format metadata-splice approach into the JavaScript ecosystem, with an
   XMP-first API aimed at AEO.
 
-**Status:** `imagemeta` now writes XMP to **WebP, AVIF, JPEG, and PNG** in pure
-dependency-free JS without re-encoding (plus HEIC read) — filling the
-previously-empty cells in the JS table above, including the AVIF row that no
-language filled without a native/compiled library.
+**Status:** `imagemeta` now writes XMP to **WebP, AVIF, HEIC, JPEG, and PNG** in
+pure dependency-free JS without re-encoding — filling the previously-empty cells
+in the JS table above, including the AVIF/HEIC rows that no language filled
+without a native/compiled library. HEIC write is validated against the Nokia
+HEIF conformance suite (grids, overlays, multi-item).
 
 > Sources for the above (2025–2026 scans) are linked from the project discussion;
 > notable references: Exiv2 docs & WebP/BMFF wiki, `little_exif` (lib.rs),

@@ -23,7 +23,13 @@ export interface ImageMetadata {
   credit?: string;
 }
 
-export type ImageFormat = "webp" | "jpeg" | "png" | "avif" | "unknown";
+export type ImageFormat =
+  | "webp"
+  | "jpeg"
+  | "png"
+  | "avif"
+  | "heic"
+  | "unknown";
 
 export class UnsupportedFormatError extends Error {
   readonly format: ImageFormat;

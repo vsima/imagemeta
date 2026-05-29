@@ -31,6 +31,13 @@ export type { ImageMetadata, ImageFormat };
 export { UnsupportedFormatError };
 export { serializeXmp, parseXmp };
 
+function dataU32(buf: Uint8Array, o: number): number {
+  return (
+    ((buf[o]! << 24) | (buf[o + 1]! << 16) | (buf[o + 2]! << 8) | buf[o + 3]!) >>>
+    0
+  );
+}
+
 /** Detect the container format from magic bytes. */
 export function detectFormat(buf: Uint8Array): ImageFormat {
   if (isWebp(buf)) return "webp";
@@ -44,7 +51,9 @@ export function detectFormat(buf: Uint8Array): ImageFormat {
     buf[3] === 0x47
   )
     return "png";
-  // ISOBMFF: bytes 4-7 are "ftyp"; brand at 8 distinguishes avif/heic.
+  // ISOBMFF: bytes 4-7 are "ftyp". The major + compatible brands distinguish
+  // AVIF (AV1) from HEIC/HEIF (HEVC). Both share the same container, so they
+  // route to the same reader/writer — the label is informational.
   if (
     buf.length >= 12 &&
     buf[4] === 0x66 &&
@@ -52,8 +61,20 @@ export function detectFormat(buf: Uint8Array): ImageFormat {
     buf[6] === 0x79 &&
     buf[7] === 0x70
   ) {
-    const brand = new TextDecoder("latin1").decode(buf.subarray(8, 12));
-    if (/avif|avis|heic|heix|mif1|msf1/.test(brand)) return "avif";
+    const dec = new TextDecoder("latin1");
+    const view = dataU32(buf, 0);
+    const ftypEnd = view > 8 && view <= buf.length ? view : buf.length;
+    const brands: string[] = [];
+    for (let o = 8; o + 4 <= ftypEnd; o += o === 8 ? 8 : 4) {
+      brands.push(dec.decode(buf.subarray(o, o + 4))); // major brand, then compatible brands (skipping minor version)
+    }
+    if (brands.some((b) => b === "avif" || b === "avis")) return "avif";
+    if (
+      brands.some((b) =>
+        /^(heic|heix|heim|heis|hevc|hevx|heif|mif1|mif2|msf1|miaf)$/.test(b),
+      )
+    )
+      return "heic";
   }
   return "unknown";
 }
@@ -68,6 +89,7 @@ export function readMetadata(buf: Uint8Array): ImageMetadata {
     case "webp":
       return readWebpMetadata(buf);
     case "avif":
+    case "heic":
       return readAvifMetadata(buf);
     case "jpeg":
       return readJpegMetadata(buf);
@@ -92,6 +114,7 @@ export function writeMetadata(
     case "webp":
       return writeWebpMetadata(buf, meta);
     case "avif":
+    case "heic":
       return writeAvifMetadata(buf, meta);
     case "jpeg":
       return writeJpegMetadata(buf, meta);
@@ -113,6 +136,7 @@ export function removeMetadata(buf: Uint8Array): Uint8Array {
     case "webp":
       return removeWebpMetadata(buf);
     case "avif":
+    case "heic":
       return removeAvifMetadata(buf);
     case "jpeg":
       return removeJpegMetadata(buf);

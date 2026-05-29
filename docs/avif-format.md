@@ -88,6 +88,30 @@ against ImageMagick: decoded pixels are byte-identical before and after a write.
 
 Same rebuild with the XMP (and EXIF) items excluded from `iinf`/`iloc`/`mdat`.
 
+## HEIC
+
+HEIC is the **same ISOBMFF container** as AVIF — only the codec configuration box
+differs (`hvcC`/HEVC vs `av1C`/AV1), which is opaque to a metadata splice. So the
+same reader and writer handle HEIC; `detectFormat` simply labels it `"heic"`
+(by inspecting the `ftyp` major + compatible brands) and routes to the same code.
+
+This was validated against the [Nokia HEIF conformance suite](https://github.com/nokiatech/heif_conformance)
+(63 files). Every single- and multi-item **still image** writes and re-decodes
+correctly in third-party decoders, including:
+
+- **grid**-tiled images (derived `grid` item + N HEVC tiles), up to 11+ items;
+- **overlay** (`iovl`) images;
+- **thumbnails** (`thmb`), **auxiliary** images (`auxl`), **derived** refs (`dimg`);
+- items stored in **`idat`** (construction method 1);
+- files with an existing **Exif** item;
+- a 21-item file.
+
+Image **sequences** (brands `msf1`/`heis` with no `meta` box — bursts / animations)
+store metadata in movie boxes (`moov`/`udta`), not `meta`, and are **out of
+scope**: the writer refuses them with a clear error rather than corrupting them.
+(Conformance files are © Nokia and are not committed to this repo; the test suite
+ships self-generated HEIC fixtures.)
+
 ## Safety / limits
 
 - If any item uses an unsupported construction method (item-relative, method 2),
