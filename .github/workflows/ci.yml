@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [20.x, 22.x, 24.x]
+        node: [22.x, 24.x]
     name: test (node ${{ matrix.node }})
     steps:
       - uses: actions/checkout@v4
@@ -19,24 +19,45 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm install
       - run: npm run typecheck
-      - run: npm test
+      - run: npm test # runs .ts directly via native type stripping (Node 22+)
+
+  node20-compat:
+    runs-on: ubuntu-latest
+    name: node20 build + smoke (lowest supported runtime)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - run: npm install # `prepare` builds dist/
+      - name: Import the built package and round-trip on Node 20
+        run: |
+          node --input-type=module -e "
+          import { writeMetadata, readMetadata } from './dist/index.js';
+          import { readFileSync } from 'node:fs';
+          const b = new Uint8Array(readFileSync('test/fixtures/simple.webp'));
+          const o = writeMetadata(b, { description: 'node20 ok', keywords: ['x'] });
+          const r = readMetadata(o);
+          if (r.description !== 'node20 ok') { console.error('FAIL', r); process.exit(1); }
+          console.log('node20 round-trip OK');
+          "
 
   interop:
     runs-on: ubuntu-latest
-    name: external-tool interop (ImageMagick)
+    name: external-tool interop (exiftool)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22.x
       - run: npm install
-      - name: Install ImageMagick
-        run: sudo apt-get update && sudo apt-get install -y imagemagick
-      - name: Write metadata then verify it parses in ImageMagick
+      - name: Install exiftool
+        run: sudo apt-get update && sudo apt-get install -y libimage-exiftool-perl
+      - name: Write metadata, then verify exiftool reads it back
         run: |
           node examples/01-read-write.mjs
-          echo "--- ImageMagick reads our XMP back ---"
-          identify -verbose examples/out.webp | grep -i "Profile-xmp"
-          magick examples/out.webp xmp:- | grep -q "Frisbee Dog" \
-            && echo "✅ XMP round-trip verified by ImageMagick" \
-            || (echo "❌ XMP not found by ImageMagick" && exit 1)
+          echo "--- exiftool output ---"
+          exiftool examples/out.webp
+          exiftool examples/out.webp | grep -q "Frisbee Dog" \
+            && echo "✅ XMP round-trip verified by exiftool" \
+            || (echo "❌ XMP not found by exiftool" && exit 1)

@@ -170,7 +170,7 @@ npm run typecheck # type-check without emitting
 npm run build     # emit ESM + .d.ts to dist/
 ```
 
-Tests run real `.webp` fixtures through full round-trips and validate RIFF framing, flag bits, and byte-level pixel preservation. Output has been independently verified to parse in ImageMagick and Apple's imaging stack.
+Tests run real `.webp` fixtures through full round-trips and validate RIFF framing, flag bits, and byte-level pixel preservation. Output is independently verified to parse in **exiftool** (in CI), and has been checked against ImageMagick and Apple's imaging stack.
 
 ## Contributing
 
