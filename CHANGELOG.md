@@ -7,6 +7,11 @@ to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **AVIF read + write + remove** (and **HEIC read**, same container). Full
+  ISOBMFF box-tree parsing; writes via a from-scratch rebuild that regenerates
+  `iinf`/`iloc`/`iref` and recomputes all `iloc` offsets, so the compressed
+  image is relocated byte-for-byte (verified: decoded pixels identical).
+- Shared ISOBMFF reader (`src/formats/isobmff.ts`).
 - WebP read/write/remove for XMP descriptive metadata (`readMetadata`,
   `writeMetadata`, `removeMetadata`).
 - Automatic simple→extended (`VP8X`) upgrade when tagging plain WebP files,
@@ -22,5 +27,4 @@ to [Semantic Versioning](https://semver.org/).
 ### Roadmap
 - JPEG (APP1 segment splice).
 - PNG (`iTXt` chunk splice).
-- AVIF read, then AVIF write (ISOBMFF `iloc` offset recalculation).
 - EXIF descriptive-tag write.

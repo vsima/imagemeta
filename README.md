@@ -38,7 +38,7 @@ Today, writing XMP into modern web image formats from JavaScript means one of:
 | `piexifjs` | JPEG-first; WebP write is buggy; no AVIF |
 | `exifr` / `ExifReader` | Read-only |
 
-**There is no pure-JS, zero-dependency library that *writes* descriptive metadata into WebP and AVIF without re-encoding.** This project fills that gap. See [`docs/landscape.md`](docs/landscape.md) for the full competitive analysis.
+**No other pure-JS, zero-dependency library *writes* descriptive metadata into WebP and AVIF without re-encoding** — not even sharp can write XMP to AVIF. `imagemeta` does. See [`docs/landscape.md`](docs/landscape.md) for the full competitive analysis.
 
 ## Features
 
@@ -54,9 +54,10 @@ Today, writing XMP into modern web image formats from JavaScript means one of:
 | Format | Read | Write | Status |
 | --- | :---: | :---: | --- |
 | **WebP** | ✅ | ✅ | **Implemented & tested** (simple + extended) |
+| **AVIF** | ✅ | ✅ | **Implemented & tested** (ISOBMFF item + full `iloc` offset recalculation) |
+| **HEIC** | ✅ | — | Reads for free (same container as AVIF) |
 | JPEG | 🔜 | 🔜 | On roadmap |
 | PNG | 🔜 | 🔜 | On roadmap |
-| AVIF / HEIC | 🔜 | 🔜 | On roadmap (read first; write is the headline goal) |
 
 Calling an unimplemented format throws a typed `UnsupportedFormatError` with a clear message — never a silent corruption. See [`docs/roadmap.md`](docs/roadmap.md).
 
@@ -147,7 +148,11 @@ WebP is a [RIFF](https://developers.google.com/speed/webp/docs/riff_container) c
 3. Set the XMP presence flag bit in `VP8X`.
 4. Splice in the `XMP ` chunk and recompute the RIFF size.
 
-The compressed image chunk is copied byte-for-byte. Read [`docs/architecture.md`](docs/architecture.md) and [`docs/webp-format.md`](docs/webp-format.md) for the deep dive.
+The compressed image chunk is copied byte-for-byte.
+
+**AVIF** is harder: it's an [ISOBMFF](https://en.wikipedia.org/wiki/ISO_base_media_file_format) box tree where XMP is an *item* whose bytes are located via absolute file offsets in the `iloc` box. Inserting metadata shifts `mdat`, invalidating every offset — so `imagemeta` reads each item's bytes, emits a fresh `meta` (regenerated `iinf`/`iloc`/`iref`) and `mdat`, and recomputes all offsets from the new layout. The compressed image data is relocated verbatim (verified: decoded pixels are byte-identical before and after).
+
+Read [`docs/architecture.md`](docs/architecture.md), [`docs/webp-format.md`](docs/webp-format.md), and [`docs/avif-format.md`](docs/avif-format.md) for the deep dives.
 
 ## Examples
 

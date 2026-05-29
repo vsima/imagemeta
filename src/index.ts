@@ -9,6 +9,11 @@ import {
   writeWebpMetadata,
   removeWebpMetadata,
 } from "./formats/webp.ts";
+import {
+  readAvifMetadata,
+  writeAvifMetadata,
+  removeAvifMetadata,
+} from "./formats/avif.ts";
 import { serializeXmp } from "./xmp/serialize.ts";
 import { parseXmp } from "./xmp/parse.ts";
 
@@ -52,6 +57,8 @@ export function readMetadata(buf: Uint8Array): ImageMetadata {
   switch (format) {
     case "webp":
       return readWebpMetadata(buf);
+    case "avif":
+      return readAvifMetadata(buf);
     default:
       throw new UnsupportedFormatError(format, "readMetadata");
   }
@@ -70,6 +77,8 @@ export function writeMetadata(
   switch (format) {
     case "webp":
       return writeWebpMetadata(buf, meta);
+    case "avif":
+      return writeAvifMetadata(buf, meta);
     default:
       throw new UnsupportedFormatError(format, "writeMetadata");
   }
@@ -85,6 +94,8 @@ export function removeMetadata(buf: Uint8Array): Uint8Array {
   switch (format) {
     case "webp":
       return removeWebpMetadata(buf);
+    case "avif":
+      return removeAvifMetadata(buf);
     default:
       throw new UnsupportedFormatError(format, "removeMetadata");
   }

@@ -48,6 +48,11 @@ unoccupied, in any language.
   multi-format metadata-splice approach into the JavaScript ecosystem, with an
   XMP-first API aimed at AEO.
 
+**Status:** `imagemeta` now writes XMP to **WebP and AVIF** in pure dependency-free
+JS without re-encoding — the previously-empty cell in the JS table above, and the
+AVIF row no language filled without a native/compiled library. JPEG and PNG are
+next.
+
 > Sources for the above (2025–2026 scans) are linked from the project discussion;
 > notable references: Exiv2 docs & WebP/BMFF wiki, `little_exif` (lib.rs),
 > sharp output docs (XMP unsupported on AVIF), piexifjs issue tracker (WebP

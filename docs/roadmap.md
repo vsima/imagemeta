@@ -1,13 +1,23 @@
 # Roadmap
 
-v1 ships WebP read/write/remove. The remaining formats are sequenced by
-risk — easiest and most reusable first, the one genuinely hard piece last.
+v1 ships **WebP and AVIF** read/write/remove — the two modern web formats, and
+the hardest piece (AVIF) up front because it's the project's differentiator.
+JPEG and PNG remain.
 
 ## Order & rationale
 
 ### ✅ WebP — done
 Flat RIFF chunks, no offset math. Proves the splice engine and the
 simple→extended upgrade pattern.
+
+### ✅ AVIF — done (read + write + remove)
+ISOBMFF box tree; XMP is a `mime` item located via `iloc`. Writing rebuilds
+`meta` (`iinf`/`iloc`/`iref`) and `mdat` from scratch, recomputing every offset,
+so the compressed image relocates byte-for-byte. **HEIC read comes free** (same
+container). See [`avif-format.md`](avif-format.md).
+
+### ✅ HEIC — read (free with AVIF)
+Identical container; the AVIF reader handles it. Write not yet exposed.
 
 ### 🔜 JPEG — read + write
 - **Slot:** XMP lives in an `APP1` marker segment whose payload begins with the
@@ -23,28 +33,6 @@ simple→extended upgrade pattern.
 - **Slot:** XMP goes in an `iTXt` chunk with keyword `XML:com.adobe.xmp`.
 - **Work:** chunk-based like WebP, plus a **CRC-32** per chunk.
 - **Risk:** low. Clean chunked format.
-
-### 🔜 AVIF / HEIC — read first
-- **Slot:** XMP is an item (`infe` type `mime`, content-type
-  `application/rdf+xml`) whose bytes are located via the `iloc` box.
-- **Work:** parse the ISOBMFF box tree
-  (`ftyp → meta → {hdlr, pitm, iinf, iref, iprp, iloc, idat}`), follow the item's
-  `iloc` extents, decode the packet.
-- **Risk:** moderate. Mostly careful box-tree walking. HEIC read comes free.
-
-### 🔜 AVIF / HEIC — write  *(the hard one)*
-This is the largest single piece in the project.
-- To add XMP you must synthesize an `infe` entry, bump `iinf`, add an `iref`
-  (`cdsc`) linking the item to the primary image, add an `iloc` extent, and
-  append the packet to `mdat`/`idat`.
-- **The hazard:** `iloc` stores **absolute file offsets**. Inserting bytes
-  shifts `mdat`, so **every `iloc` offset for every item must be recalculated**.
-  Get it wrong and the file won't decode at all.
-- **Versioning:** `meta`/`iinf`/`iloc` are FullBoxes; `iloc` offset/length field
-  sizes are configurable (0/4/8 bytes) and must be respected or rewritten
-  consistently.
-- **Mitigation:** heaviest test investment — a corpus of real AVIF/HEIC files
-  from multiple encoders, with full decode verification after every write.
 
 ### 🔜 EXIF descriptive-tag write *(secondary)*
 `ImageDescription`, `Artist`, `Copyright`, `Orientation`. This re-introduces

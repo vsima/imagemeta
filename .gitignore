@@ -5,5 +5,6 @@ dist/
 coverage/
 test/fixtures/_out*
 examples/out.webp
+examples/out.avif
 examples/tagged/
 *.tmp

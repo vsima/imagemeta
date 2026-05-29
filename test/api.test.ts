@@ -34,7 +34,7 @@ test("detectFormat identifies formats by magic bytes", () => {
 });
 
 test("unimplemented formats throw a typed, helpful error", () => {
-  for (const buf of [JPEG, PNG, AVIF]) {
+  for (const buf of [JPEG, PNG]) {
     assert.throws(
       () => readMetadata(buf),
       (e: unknown) => {

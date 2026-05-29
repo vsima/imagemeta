@@ -8,6 +8,7 @@ node examples/01-read-write.mjs      # tag an image, read it back
 node examples/02-aeo-batch.mjs       # batch-tag a folder for AEO
 node examples/03-strip-metadata.mjs  # strip metadata for privacy
 node examples/04-cloud-function.mjs  # edge/serverless handler (+ local smoke test)
+node examples/05-avif.mjs            # write XMP into AVIF (the headline feature)
 ```
 
 These import from `../src/index.ts` so they run against the live source. In your

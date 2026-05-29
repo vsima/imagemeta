@@ -53,11 +53,17 @@ jobs:
       - run: npm install
       - name: Install exiftool
         run: sudo apt-get update && sudo apt-get install -y libimage-exiftool-perl
-      - name: Write metadata, then verify exiftool reads it back
+      - name: WebP — write metadata, verify exiftool reads it back
         run: |
           node examples/01-read-write.mjs
-          echo "--- exiftool output ---"
           exiftool examples/out.webp
           exiftool examples/out.webp | grep -q "Frisbee Dog" \
-            && echo "✅ XMP round-trip verified by exiftool" \
-            || (echo "❌ XMP not found by exiftool" && exit 1)
+            && echo "✅ WebP XMP round-trip verified by exiftool" \
+            || (echo "❌ WebP XMP not found by exiftool" && exit 1)
+      - name: AVIF — write metadata, verify exiftool reads it back
+        run: |
+          node examples/05-avif.mjs
+          exiftool examples/out.avif
+          exiftool examples/out.avif | grep -q "Rice Terraces" \
+            && echo "✅ AVIF XMP round-trip verified by exiftool" \
+            || (echo "❌ AVIF XMP not found by exiftool" && exit 1)
