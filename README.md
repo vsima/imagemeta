@@ -53,13 +53,13 @@ Today, writing XMP into modern web image formats from JavaScript means one of:
 
 | Format | Read | Write | Status |
 | --- | :---: | :---: | --- |
-| **WebP** | ✅ | ✅ | **Implemented & tested** (simple + extended) |
-| **AVIF** | ✅ | ✅ | **Implemented & tested** (ISOBMFF item + full `iloc` offset recalculation) |
+| **WebP** | ✅ | ✅ | Implemented & tested (simple + extended) |
+| **AVIF** | ✅ | ✅ | Implemented & tested (ISOBMFF item + full `iloc` offset recalculation) |
+| **JPEG** | ✅ | ✅ | Implemented & tested (APP1 segment splice) |
+| **PNG** | ✅ | ✅ | Implemented & tested (standard `iTXt`, CRC-correct) |
 | **HEIC** | ✅ | — | Reads for free (same container as AVIF) |
-| JPEG | 🔜 | 🔜 | On roadmap |
-| PNG | 🔜 | 🔜 | On roadmap |
 
-Calling an unimplemented format throws a typed `UnsupportedFormatError` with a clear message — never a silent corruption. See [`docs/roadmap.md`](docs/roadmap.md).
+All four major web image formats are supported. An unrecognized format throws a typed `UnsupportedFormatError` rather than risking silent corruption. See [`docs/roadmap.md`](docs/roadmap.md).
 
 ## Install
 
@@ -149,6 +149,8 @@ WebP is a [RIFF](https://developers.google.com/speed/webp/docs/riff_container) c
 4. Splice in the `XMP ` chunk and recompute the RIFF size.
 
 The compressed image chunk is copied byte-for-byte.
+
+**JPEG** stores XMP in an `APP1` marker segment (signature `http://ns.adobe.com/xap/1.0/\0`); **PNG** uses a standard `iTXt` chunk (`XML:com.adobe.xmp`, CRC-32 recomputed). Both follow the same splice pattern — locate/replace the metadata block, copy everything else (including the entropy-coded scan / IDAT data) byte-for-byte.
 
 **AVIF** is harder: it's an [ISOBMFF](https://en.wikipedia.org/wiki/ISO_base_media_file_format) box tree where XMP is an *item* whose bytes are located via absolute file offsets in the `iloc` box. Inserting metadata shifts `mdat`, invalidating every offset — so `imagemeta` reads each item's bytes, emits a fresh `meta` (regenerated `iinf`/`iloc`/`iref`) and `mdat`, and recomputes all offsets from the new layout. The compressed image data is relocated verbatim (verified: decoded pixels are byte-identical before and after).
 

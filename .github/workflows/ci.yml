@@ -67,3 +67,19 @@ jobs:
           exiftool examples/out.avif | grep -q "Rice Terraces" \
             && echo "✅ AVIF XMP round-trip verified by exiftool" \
             || (echo "❌ AVIF XMP not found by exiftool" && exit 1)
+      - name: JPEG & PNG — write metadata, verify exiftool reads it back
+        run: |
+          node --input-type=module -e "
+          import { writeMetadata } from './src/index.ts';
+          import { readFileSync, writeFileSync } from 'node:fs';
+          for (const fmt of ['jpg', 'png']) {
+            const b = new Uint8Array(readFileSync('test/fixtures/sample.' + fmt));
+            const out = writeMetadata(b, { description: 'CI interop ' + fmt, keywords: ['ci'] });
+            writeFileSync('interop.' + fmt, out);
+          }
+          "
+          for fmt in jpg png; do
+            exiftool interop.$fmt | grep -q "CI interop $fmt" \
+              && echo "✅ $fmt XMP round-trip verified by exiftool" \
+              || (echo "❌ $fmt XMP not found by exiftool" && exit 1)
+          done

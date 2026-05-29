@@ -1,8 +1,8 @@
 # Roadmap
 
-v1 ships **WebP and AVIF** read/write/remove — the two modern web formats, and
-the hardest piece (AVIF) up front because it's the project's differentiator.
-JPEG and PNG remain.
+v1 ships **WebP, AVIF, JPEG, and PNG** read/write/remove (plus HEIC read) — all
+four major web image formats. AVIF was built first because it's the hardest and
+the project's differentiator. EXIF descriptive-tag write remains.
 
 ## Order & rationale
 
@@ -19,20 +19,18 @@ container). See [`avif-format.md`](avif-format.md).
 ### ✅ HEIC — read (free with AVIF)
 Identical container; the AVIF reader handles it. Write not yet exposed.
 
-### 🔜 JPEG — read + write
-- **Slot:** XMP lives in an `APP1` marker segment whose payload begins with the
-  namespace signature `http://ns.adobe.com/xap/1.0/\0`.
-- **Work:** walk the `0xFF`-prefixed marker segments, replace/insert the XMP
-  `APP1`, copy all other segments (including the image scan) verbatim.
-- **Risk:** low. No offset pointers in the XMP path. (EXIF in `APP1`/TIFF is the
-  fragile part — deliberately deferred; see below.)
-- **Watch:** the 64 KB per-segment limit → ExtendedXMP across multiple segments
-  for large packets.
+### ✅ JPEG — done (read + write + remove)
+XMP in an `APP1` marker segment (`http://ns.adobe.com/xap/1.0/\0`). Header
+segments are parsed up to `SOS`; the entropy-coded scan and everything after is
+copied verbatim. EXIF `APP1` segments are left untouched.
+- **Known limit:** packets > ~64 KB need ExtendedXMP (multi-segment) — throws
+  clearly for now; our descriptive packets are ~1–2 KB.
 
-### 🔜 PNG — read + write
-- **Slot:** XMP goes in an `iTXt` chunk with keyword `XML:com.adobe.xmp`.
-- **Work:** chunk-based like WebP, plus a **CRC-32** per chunk.
-- **Risk:** low. Clean chunked format.
+### ✅ PNG — done (read + write + remove)
+XMP in a standard `iTXt` chunk (`XML:com.adobe.xmp`), with a from-scratch
+zero-dependency CRC-32. Compressed `iTXt` (flag=1) is not read (would need an
+inflate dependency); remove also strips ImageMagick's non-standard
+`zTXt "Raw profile type xmp"`.
 
 ### 🔜 EXIF descriptive-tag write *(secondary)*
 `ImageDescription`, `Artist`, `Copyright`, `Orientation`. This re-introduces

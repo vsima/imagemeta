@@ -29,8 +29,8 @@ export class UnsupportedFormatError extends Error {
   readonly format: ImageFormat;
   constructor(format: ImageFormat, operation: string) {
     super(
-      `${operation} is not yet implemented for format "${format}". ` +
-        `v1 implements WebP; JPEG/PNG/AVIF are on the roadmap.`,
+      `${operation} does not support format "${format}". ` +
+        `Supported: WebP, AVIF, JPEG, PNG (and HEIC read).`,
     );
     this.name = "UnsupportedFormatError";
     this.format = format;

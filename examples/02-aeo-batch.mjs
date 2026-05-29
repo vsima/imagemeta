@@ -28,10 +28,11 @@ for (const [rel, meta] of Object.entries(manifest)) {
   const buf = new Uint8Array(readFileSync(path));
   const format = detectFormat(buf);
 
-  if (format !== "webp") {
-    console.log(`⏭️  skip ${rel} (${format} not yet implemented)`);
+  if (format === "unknown") {
+    console.log(`⏭️  skip ${rel} (unrecognized format)`);
     continue;
   }
+  // WebP, AVIF, JPEG, and PNG are all supported.
 
   const tagged = writeMetadata(buf, meta);
   const name = rel.split("/").pop();

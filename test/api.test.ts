@@ -33,17 +33,16 @@ test("detectFormat identifies formats by magic bytes", () => {
   assert.equal(detectFormat(GARBAGE), "unknown");
 });
 
-test("unimplemented formats throw a typed, helpful error", () => {
-  for (const buf of [JPEG, PNG]) {
-    assert.throws(
-      () => readMetadata(buf),
-      (e: unknown) => {
-        assert.ok(e instanceof UnsupportedFormatError);
-        assert.match(e.message, /roadmap/);
-        return true;
-      },
-    );
-  }
+test("unknown/unsupported formats throw a typed, helpful error", () => {
+  assert.throws(
+    () => readMetadata(GARBAGE),
+    (e: unknown) => {
+      assert.ok(e instanceof UnsupportedFormatError);
+      assert.equal(e.format, "unknown");
+      return true;
+    },
+  );
+  assert.throws(() => writeMetadata(GARBAGE, { title: "x" }), UnsupportedFormatError);
 });
 
 test("removeMetadata strips XMP and is idempotent", () => {

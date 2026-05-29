@@ -14,6 +14,16 @@ import {
   writeAvifMetadata,
   removeAvifMetadata,
 } from "./formats/avif.ts";
+import {
+  readJpegMetadata,
+  writeJpegMetadata,
+  removeJpegMetadata,
+} from "./formats/jpeg.ts";
+import {
+  readPngMetadata,
+  writePngMetadata,
+  removePngMetadata,
+} from "./formats/png.ts";
 import { serializeXmp } from "./xmp/serialize.ts";
 import { parseXmp } from "./xmp/parse.ts";
 
@@ -59,6 +69,10 @@ export function readMetadata(buf: Uint8Array): ImageMetadata {
       return readWebpMetadata(buf);
     case "avif":
       return readAvifMetadata(buf);
+    case "jpeg":
+      return readJpegMetadata(buf);
+    case "png":
+      return readPngMetadata(buf);
     default:
       throw new UnsupportedFormatError(format, "readMetadata");
   }
@@ -79,6 +93,10 @@ export function writeMetadata(
       return writeWebpMetadata(buf, meta);
     case "avif":
       return writeAvifMetadata(buf, meta);
+    case "jpeg":
+      return writeJpegMetadata(buf, meta);
+    case "png":
+      return writePngMetadata(buf, meta);
     default:
       throw new UnsupportedFormatError(format, "writeMetadata");
   }
@@ -96,6 +114,10 @@ export function removeMetadata(buf: Uint8Array): Uint8Array {
       return removeWebpMetadata(buf);
     case "avif":
       return removeAvifMetadata(buf);
+    case "jpeg":
+      return removeJpegMetadata(buf);
+    case "png":
+      return removePngMetadata(buf);
     default:
       throw new UnsupportedFormatError(format, "removeMetadata");
   }

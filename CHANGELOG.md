@@ -7,6 +7,11 @@ to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **JPEG read + write + remove** — XMP via `APP1` marker segment; entropy-coded
+  image data preserved byte-for-byte. EXIF `APP1` segments left untouched.
+- **PNG read + write + remove** — XMP via standard `iTXt` (`XML:com.adobe.xmp`)
+  with correct CRC-32; zero-dependency CRC implementation. Remove also strips
+  ImageMagick's non-standard `zTXt "Raw profile type xmp"`.
 - **AVIF read + write + remove** (and **HEIC read**, same container). Full
   ISOBMFF box-tree parsing; writes via a from-scratch rebuild that regenerates
   `iinf`/`iloc`/`iref` and recomputes all `iloc` offsets, so the compressed
@@ -25,6 +30,6 @@ to [Semantic Versioning](https://semver.org/).
   preservation and RIFF-framing validation.
 
 ### Roadmap
-- JPEG (APP1 segment splice).
-- PNG (`iTXt` chunk splice).
-- EXIF descriptive-tag write.
+- EXIF descriptive-tag write (`ImageDescription`/`Artist`/`Copyright`).
+- ExtendedXMP for JPEG packets > 64 KB.
+- HEIC write.
