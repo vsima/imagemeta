@@ -1,0 +1,30 @@
+{
+  "name": "imagemeta",
+  "version": "0.0.1",
+  "description": "Zero-dependency, byte-preserving image metadata writer for the modern web. XMP-first, built for AEO. JPEG / PNG / WebP / AVIF.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "src"],
+  "sideEffects": false,
+  "engines": { "node": ">=20.19.0" },
+  "scripts": {
+    "test": "node --test test/*.test.ts",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepare": "npm run build"
+  },
+  "keywords": ["exif", "xmp", "metadata", "webp", "avif", "jpeg", "png", "aeo", "seo", "zero-dependency", "lossless"],
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.7.0"
+  }
+}
