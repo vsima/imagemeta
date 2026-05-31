@@ -6,6 +6,23 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-05-31
+
+Stable release. The public API (`readMetadata` / `writeMetadata` /
+`removeMetadata` / `detectFormat` / `serializeXmp` / `parseXmp` and the
+`ImageMetadata` shape) is now covered by semver — no breaking changes without a
+major bump. Functionally identical to 0.1.0 plus the trust/packaging hardening
+below.
+
+### Added
+- **npm provenance** — releases are published from GitHub Actions with OIDC, so
+  the npm page shows a verified build-from-source attestation.
+- **Zero-dependency CI guard** (`scripts/check-zero-deps.mjs`) — the build fails
+  if any runtime dependency is ever introduced, making the "0 deps" claim
+  machine-enforced.
+- `./package.json` added to the `exports` map for tooling friendliness.
+- `repository`, `homepage`, and `bugs` fields (also required for provenance).
+
 ## [0.1.0] - 2026-05-31
 
 First public release. Reads, writes, and removes descriptive XMP metadata across

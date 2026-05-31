@@ -6,6 +6,16 @@ on:
   pull_request:
 
 jobs:
+  zero-deps:
+    runs-on: ubuntu-latest
+    name: zero runtime dependencies
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - run: node scripts/check-zero-deps.mjs
+
   test:
     runs-on: ubuntu-latest
     strategy:

@@ -4,7 +4,9 @@
 
 [![CI](https://github.com/vsima/aeo-image/actions/workflows/ci.yml/badge.svg)](https://github.com/vsima/aeo-image/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/aeo-image.svg)](https://www.npmjs.com/package/aeo-image)
-![dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)
+[![install size](https://packagephobia.com/badge?p=aeo-image)](https://packagephobia.com/result?p=aeo-image)
+[![dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://github.com/vsima/aeo-image/blob/main/scripts/check-zero-deps.mjs)
+[![provenance](https://img.shields.io/badge/npm-provenance-blue)](https://www.npmjs.com/package/aeo-image#provenance)
 ![types](https://img.shields.io/badge/types-included-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 

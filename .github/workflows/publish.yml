@@ -1,0 +1,40 @@
+name: Publish to npm
+
+# Publishes to npm with provenance (a verifiable, signed link between the
+# published tarball and the exact GitHub commit + workflow that built it).
+# Triggered when a GitHub Release is published, or manually.
+#
+# One-time setup required (repo admin):
+#   1. On npmjs.com, create a Granular Access Token for `aeo-image` with
+#      "Read and write" + "Bypass 2FA for automation" (or an Automation token).
+#   2. Add it as the repository secret `NPM_TOKEN`
+#      (Settings → Secrets and variables → Actions).
+# Provenance also requires the package.json `repository.url` to match this repo
+# (already set) and the publish to run from this public GitHub Actions workflow.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # REQUIRED for npm provenance (OIDC)
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          registry-url: "https://registry.npmjs.org"
+      - run: npm install
+      - run: node scripts/check-zero-deps.mjs
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
