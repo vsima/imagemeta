@@ -6,6 +6,12 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-05-31
+
+First public release. Reads, writes, and removes descriptive XMP metadata across
+all major web/device image formats — pure TypeScript, zero runtime dependencies,
+byte-preserving (never re-encodes pixels).
+
 ### Added
 - **JPEG read + write + remove** — XMP via `APP1` marker segment; entropy-coded
   image data preserved byte-for-byte. EXIF `APP1` segments left untouched.
