@@ -1,15 +1,15 @@
-# imagemeta
+# aeo-image
 
 > Write descriptive metadata — captions, keywords, alt text — into **WebP, AVIF, HEIC, JPEG & PNG** so AI answer engines (ChatGPT, Perplexity, Google AI Overviews) and search can read your images. The only pure-JS, **zero-dependency** library that writes XMP to AVIF/HEIC. **Byte-preserving** (never re-encodes). Runs on Node, Bun, Deno & edge.
 
-[![CI](https://github.com/vsima/imagemeta/actions/workflows/ci.yml/badge.svg)](https://github.com/vsima/imagemeta/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/npm/v/imagemeta.svg)](https://www.npmjs.com/package/imagemeta)
+[![CI](https://github.com/vsima/aeo-image/actions/workflows/ci.yml/badge.svg)](https://github.com/vsima/aeo-image/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/aeo-image.svg)](https://www.npmjs.com/package/aeo-image)
 ![dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)
 ![types](https://img.shields.io/badge/types-included-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
 ```ts
-import { writeMetadata, readMetadata } from "imagemeta";
+import { writeMetadata, readMetadata } from "aeo-image";
 
 const tagged = writeMetadata(webpBytes, {
   description: "A golden retriever catching a frisbee on a beach at sunset",
@@ -38,7 +38,7 @@ Today, writing XMP into modern web image formats from JavaScript means one of:
 | `piexifjs` | JPEG-first; WebP write is buggy; no AVIF |
 | `exifr` / `ExifReader` | Read-only |
 
-**No other pure-JS, zero-dependency library *writes* descriptive metadata into WebP and AVIF without re-encoding** — not even sharp can write XMP to AVIF. `imagemeta` does. See [`docs/landscape.md`](docs/landscape.md) for the full competitive analysis.
+**No other pure-JS, zero-dependency library *writes* descriptive metadata into WebP and AVIF without re-encoding** — not even sharp can write XMP to AVIF. `aeo-image` does. See [`docs/landscape.md`](docs/landscape.md) for the full competitive analysis.
 
 ## Features
 
@@ -64,7 +64,7 @@ All four major web image formats are supported. An unrecognized format throws a 
 ## Install
 
 ```bash
-npm install imagemeta
+npm install aeo-image
 ```
 
 Requires Node ≥ 20 (or any modern runtime with `TextEncoder`/`Uint8Array`).
@@ -74,7 +74,7 @@ Requires Node ≥ 20 (or any modern runtime with `TextEncoder`/`Uint8Array`).
 ### Read
 
 ```ts
-import { readMetadata } from "imagemeta";
+import { readMetadata } from "aeo-image";
 import { readFileSync } from "node:fs";
 
 const meta = readMetadata(new Uint8Array(readFileSync("photo.webp")));
@@ -84,7 +84,7 @@ console.log(meta.description, meta.keywords);
 ### Write (tag for AEO)
 
 ```ts
-import { writeMetadata } from "imagemeta";
+import { writeMetadata } from "aeo-image";
 import { readFileSync, writeFileSync } from "node:fs";
 
 const input = new Uint8Array(readFileSync("photo.webp"));
@@ -103,14 +103,14 @@ writeFileSync("photo.tagged.webp", output);
 ### Strip (privacy)
 
 ```ts
-import { removeMetadata } from "imagemeta";
+import { removeMetadata } from "aeo-image";
 const clean = removeMetadata(input); // removes XMP/EXIF, keeps pixels + ICC
 ```
 
 ### Detect format
 
 ```ts
-import { detectFormat } from "imagemeta";
+import { detectFormat } from "aeo-image";
 detectFormat(buf); // "webp" | "jpeg" | "png" | "avif" | "heic" | "unknown"
 ```
 
@@ -152,7 +152,7 @@ The compressed image chunk is copied byte-for-byte.
 
 **JPEG** stores XMP in an `APP1` marker segment (signature `http://ns.adobe.com/xap/1.0/\0`); **PNG** uses a standard `iTXt` chunk (`XML:com.adobe.xmp`, CRC-32 recomputed). Both follow the same splice pattern — locate/replace the metadata block, copy everything else (including the entropy-coded scan / IDAT data) byte-for-byte.
 
-**AVIF and HEIC** are harder: they're [ISOBMFF](https://en.wikipedia.org/wiki/ISO_base_media_file_format) box trees (same container, different codec) where XMP is an *item* whose bytes are located via absolute file offsets in the `iloc` box. Inserting metadata shifts `mdat`, invalidating every offset — so `imagemeta` reads each item's bytes, emits a fresh `meta` (regenerated `iinf`/`iloc`/`iref`) and `mdat`, and recomputes all offsets from the new layout. The compressed image data is relocated verbatim (verified: decoded pixels are byte-identical before and after). The same engine handles HEIC, and was validated against the full [Nokia HEIF conformance suite](https://github.com/nokiatech/heif_conformance) — including grid-tiled, overlay, thumbnail, and multi-item files.
+**AVIF and HEIC** are harder: they're [ISOBMFF](https://en.wikipedia.org/wiki/ISO_base_media_file_format) box trees (same container, different codec) where XMP is an *item* whose bytes are located via absolute file offsets in the `iloc` box. Inserting metadata shifts `mdat`, invalidating every offset — so `aeo-image` reads each item's bytes, emits a fresh `meta` (regenerated `iinf`/`iloc`/`iref`) and `mdat`, and recomputes all offsets from the new layout. The compressed image data is relocated verbatim (verified: decoded pixels are byte-identical before and after). The same engine handles HEIC, and was validated against the full [Nokia HEIF conformance suite](https://github.com/nokiatech/heif_conformance) — including grid-tiled, overlay, thumbnail, and multi-item files.
 
 Read [`docs/architecture.md`](docs/architecture.md), [`docs/webp-format.md`](docs/webp-format.md), and [`docs/avif-format.md`](docs/avif-format.md) for the deep dives.
 

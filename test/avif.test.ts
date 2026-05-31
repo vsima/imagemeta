@@ -23,7 +23,7 @@ const META = {
   title: "AVIF Write",
   keywords: ["avif", "xmp", "write"],
   altText: "alt here",
-  creator: "imagemeta",
+  creator: "aeo-image",
   rights: "© 2026",
   credit: "Studio",
 };

@@ -50,7 +50,7 @@ description of what the image is. Answer engines and image pipelines read it.
 Tag images as part of your build so the deployed assets are AEO-ready:
 
 ```js
-import { writeMetadata } from "imagemeta";
+import { writeMetadata } from "aeo-image";
 // for each image in /public, write description/keywords/altText from your CMS
 ```
 

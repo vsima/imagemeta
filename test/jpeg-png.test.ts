@@ -19,7 +19,7 @@ const META = {
   title: "Title",
   keywords: ["alpha", "beta", "gamma & delta <x>"],
   altText: "alt text here",
-  creator: "imagemeta",
+  creator: "aeo-image",
   rights: "© 2026 Studio",
   credit: "Credit Line",
 };

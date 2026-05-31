@@ -2,7 +2,7 @@
 
 AVIF and HEIC are [ISOBMFF](https://en.wikipedia.org/wiki/ISO_base_media_file_format)
 files — the same box-based container as MP4. This is the hardest format
-`imagemeta` supports, and the reason the library is differentiated: no other
+`aeo-image` supports, and the reason the library is differentiated: no other
 pure-JS library writes XMP to AVIF. This doc explains the implementation in
 `src/formats/avif.ts` (and the shared `isobmff.ts`).
 
@@ -63,7 +63,7 @@ HEIC uses the identical structure, so reading it is free.
 pushes `mdat` later in the file — invalidating *every* existing offset, including
 the primary image's. A naive insert corrupts the file so it won't decode.
 
-`imagemeta` avoids fragile delta-patching with a **full rebuild**:
+`aeo-image` avoids fragile delta-patching with a **full rebuild**:
 
 1. **Read every item's bytes** via the existing `iloc` (so we can relocate them).
 2. **Regenerate `meta`:**

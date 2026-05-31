@@ -12,8 +12,8 @@ byte-preserving** metadata library, so contributions are held to two hard rules:
 ## Getting started
 
 ```bash
-git clone https://github.com/vsima/imagemeta
-cd imagemeta
+git clone https://github.com/vsima/aeo-image
+cd aeo-image
 npm install        # installs TypeScript (dev only)
 npm test           # Node's built-in runner; runs .ts directly on Node 22+
 npm run typecheck

@@ -22,7 +22,7 @@ const META = {
   title: "HEIC Write",
   keywords: ["heic", "hevc", "test"],
   altText: "alt",
-  creator: "imagemeta",
+  creator: "aeo-image",
   rights: "© 2026",
 };
 

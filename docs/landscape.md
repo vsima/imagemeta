@@ -48,7 +48,7 @@ unoccupied, in any language.
   multi-format metadata-splice approach into the JavaScript ecosystem, with an
   XMP-first API aimed at AEO.
 
-**Status:** `imagemeta` now writes XMP to **WebP, AVIF, HEIC, JPEG, and PNG** in
+**Status:** `aeo-image` now writes XMP to **WebP, AVIF, HEIC, JPEG, and PNG** in
 pure dependency-free JS without re-encoding — filling the previously-empty cells
 in the JS table above, including the AVIF/HEIC rows that no language filled
 without a native/compiled library. HEIC write is validated against the Nokia

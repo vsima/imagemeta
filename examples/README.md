@@ -15,7 +15,7 @@ These import from `../src/index.ts` so they run against the live source. In your
 own project, import from the package instead:
 
 ```js
-import { writeMetadata, readMetadata, removeMetadata, detectFormat } from "imagemeta";
+import { writeMetadata, readMetadata, removeMetadata, detectFormat } from "aeo-image";
 ```
 
 Generated output (`out.webp`, `tagged/`) is git-ignored. Verify embedded XMP

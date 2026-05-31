@@ -1,5 +1,5 @@
 {
-  "name": "imagemeta",
+  "name": "aeo-image",
   "version": "0.1.0",
   "description": "Write descriptive metadata — captions, keywords, alt text — into WebP, AVIF, HEIC, JPEG & PNG so AI answer engines (ChatGPT, Perplexity, Google AI Overviews) and search can read your images. The only pure-JS, zero-dependency library that writes XMP to AVIF/HEIC. Byte-preserving (never re-encodes). Runs on Node, Bun, Deno & edge.",
   "type": "module",

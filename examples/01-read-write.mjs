@@ -3,7 +3,7 @@
 //   node examples/01-read-write.mjs
 //
 // In your own project, import from the package instead of the source:
-//   import { writeMetadata, readMetadata } from "imagemeta";
+//   import { writeMetadata, readMetadata } from "aeo-image";
 import { writeMetadata, readMetadata } from "../src/index.ts";
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
