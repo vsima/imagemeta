@@ -1,6 +1,6 @@
 # imagemeta
 
-> Zero-dependency, byte-preserving image metadata for the modern web. **XMP-first**, built for **AEO** (Answer Engine Optimization). Pure TypeScript — runs anywhere JavaScript runs, including edge and serverless functions.
+> Write descriptive metadata — captions, keywords, alt text — into **WebP, AVIF, HEIC, JPEG & PNG** so AI answer engines (ChatGPT, Perplexity, Google AI Overviews) and search can read your images. The only pure-JS, **zero-dependency** library that writes XMP to AVIF/HEIC. **Byte-preserving** (never re-encodes). Runs on Node, Bun, Deno & edge.
 
 [![CI](https://github.com/vsima/imagemeta/actions/workflows/ci.yml/badge.svg)](https://github.com/vsima/imagemeta/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/imagemeta.svg)](https://www.npmjs.com/package/imagemeta)
