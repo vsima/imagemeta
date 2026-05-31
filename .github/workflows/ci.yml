@@ -39,7 +39,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20.x
-      - run: npm install # `prepare` builds dist/
+      - run: npm install
+      - run: npm run build # explicit: no install-time build since v1.0.1
       - name: Import the built package and round-trip on Node 20
         run: |
           node --input-type=module -e "
