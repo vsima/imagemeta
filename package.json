@@ -1,7 +1,7 @@
 {
   "name": "imagemeta",
   "version": "0.0.1",
-  "description": "Zero-dependency, byte-preserving XMP metadata writer for WebP, AVIF, HEIC, JPEG and PNG. Built for AEO. Pure TypeScript, no re-encoding, runs on the edge.",
+  "description": "Write descriptive metadata — captions, keywords, alt text — into WebP, AVIF, HEIC, JPEG & PNG so AI answer engines (ChatGPT, Perplexity, Google AI Overviews) and search can read your images. The only pure-JS, zero-dependency library that writes XMP to AVIF/HEIC. Byte-preserving (never re-encodes). Runs on Node, Bun, Deno & edge.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
