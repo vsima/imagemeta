@@ -7,6 +7,7 @@
 [![install size](https://packagephobia.com/badge?p=aeo-image)](https://packagephobia.com/result?p=aeo-image)
 [![dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://github.com/vsima/aeo-image/blob/main/scripts/check-zero-deps.mjs)
 [![provenance](https://img.shields.io/badge/npm-provenance-blue)](https://www.npmjs.com/package/aeo-image#provenance)
+[![Socket Badge](https://socket.dev/api/badge/npm/package/aeo-image)](https://socket.dev/npm/package/aeo-image)
 ![types](https://img.shields.io/badge/types-included-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 

@@ -6,6 +6,19 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-05-31
+
+### Changed
+- Replaced the `prepare` lifecycle script with `prepublishOnly`. The build now
+  runs only at publish time (and explicitly in CI), so the published package has
+  **no install scripts at all** — consumers run zero lifecycle code on
+  `npm install`. Improves supply-chain posture (clears Socket.dev's install-script
+  signal). Note: installing directly from a git URL no longer auto-builds; install
+  from npm (`npm install aeo-image`), which ships prebuilt `dist/`.
+
+### Added
+- Socket.dev badge in the README.
+
 ## [1.0.0] - 2026-05-31
 
 Stable release. The public API (`readMetadata` / `writeMetadata` /
