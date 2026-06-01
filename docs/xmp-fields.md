@@ -3,6 +3,13 @@
 The `ImageMetadata` object is a semantic façade. This is the exact mapping onto
 XMP namespaces, and why each field matters for answer engines and search.
 
+> **Conformance:** metadata is written as an **Adobe XMP** packet (not legacy
+> IPTC-IIM). Fields follow the [IPTC Photo Metadata Standard 2025.1](https://iptc.org/standards/photo-metadata/iptc-standard/)
+> (descriptive + accessibility + rights/licensing subset), plus Dublin Core,
+> Adobe (`photoshop:`/`xmpRights:`), and PLUS (`plus:`, ns 1.0). `AltTextAccessibility`
+> dates to IPTC 2021.1. The 2025.1 AI-generation provenance properties are not
+> yet implemented.
+
 ## Mapping
 
 | `ImageMetadata` field | XMP property | Structure | Namespace URI |

@@ -6,6 +6,15 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-06-01
+
+### Added
+- **Standards & conformance** section in the README and `docs/xmp-fields.md`:
+  states we write Adobe XMP (not legacy IPTC-IIM) conforming to the IPTC Photo
+  Metadata Standard 2025.1 (descriptive/accessibility/rights subset) + Dublin
+  Core, Adobe, and PLUS namespaces, and that 2025.1 AI-generation properties are
+  not yet implemented. Docs only.
+
 ## [1.1.0] - 2026-06-01
 
 ### Added

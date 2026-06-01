@@ -74,6 +74,22 @@ Being precise about what's spec-backed vs. forward-looking:
 
 In short: the **documented, here-today** win is portable, machine-readable **attribution + licensing** (which Google reads and recommends embedding) plus accessibility; the AI-search upside is a bet on where file-level metadata is heading.
 
+## Standards & conformance
+
+`aeo-image` writes metadata as an **Adobe XMP** packet (the modern serialization) — **not** the legacy IPTC-IIM binary block. This is what Google and current tooling read.
+
+Fields conform to the **[IPTC Photo Metadata Standard 2025.1](https://iptc.org/standards/photo-metadata/iptc-standard/)** (the current revision), specifically the descriptive, accessibility, and rights/licensing subset, across these namespaces:
+
+| Namespace | Prefix | Used for |
+| --- | --- | --- |
+| Dublin Core | `dc:` | description, title, subject/keywords, creator, rights |
+| IPTC Core | `Iptc4xmpCore:` | `AltTextAccessibility` (IPTC **2021.1**+) |
+| Adobe Photoshop | `photoshop:` | credit, copyright |
+| XMP Rights | `xmpRights:` | web statement (license URL) |
+| PLUS | `plus:` (ns 1.0) | licensor (license-acquisition link) |
+
+**Not yet implemented:** IPTC 2025.1's AI-generation provenance properties (AI Prompt Information, AI System Used, …) — tracked in the roadmap.
+
 ## Install
 
 ```bash

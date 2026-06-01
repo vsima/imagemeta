@@ -1,6 +1,6 @@
 {
   "name": "aeo-image",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Write descriptive + rights metadata (captions, keywords, alt text, creator, license) into WebP, AVIF, HEIC, JPEG & PNG — self-describing images that Google Images reads and recommends embedding, built for the AI-search era. The only pure-JS, zero-dependency library that writes XMP to AVIF/HEIC. Byte-preserving; runs on Node, Bun, Deno & edge.",
   "type": "module",
   "main": "./dist/index.js",
