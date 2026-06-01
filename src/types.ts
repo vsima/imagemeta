@@ -21,6 +21,19 @@ export interface ImageMetadata {
   altText?: string;
   /** Credit line. Maps to photoshop:Credit. */
   credit?: string;
+  /**
+   * URL to the license / usage-terms page. Maps to xmpRights:WebStatement.
+   * One of the two fields Google Images reads for the "Licensable" badge.
+   */
+  licenseUrl?: string;
+  /**
+   * Where to acquire a license (+ optional licensor name). Maps to the IPTC
+   * PLUS plus:Licensor structure (plus:LicensorURL / plus:LicensorName).
+   * Powers the "Get this image on…" link in Google Images.
+   */
+  licensor?: { url: string; name?: string };
+  /** Explicit copyright notice, distinct from `rights`. Maps to photoshop:Copyright. */
+  copyrightNotice?: string;
 }
 
 export type ImageFormat =

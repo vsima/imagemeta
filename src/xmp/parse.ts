@@ -75,5 +75,20 @@ export function parseXmp(xmp: string): ImageMetadata {
   const credit = simple(xmp, "photoshop:Credit");
   if (credit) meta.credit = credit;
 
+  const copyrightNotice = simple(xmp, "photoshop:Copyright");
+  if (copyrightNotice) meta.copyrightNotice = copyrightNotice;
+
+  const licenseUrl = simple(xmp, "xmpRights:WebStatement");
+  if (licenseUrl) meta.licenseUrl = licenseUrl;
+
+  // IPTC PLUS Licensor: read the nested URL (required) and optional name.
+  const licensorUrl = simple(xmp, "plus:LicensorURL");
+  if (licensorUrl) {
+    const licensorName = simple(xmp, "plus:LicensorName");
+    meta.licensor = licensorName
+      ? { url: licensorUrl, name: licensorName }
+      : { url: licensorUrl };
+  }
+
   return meta;
 }

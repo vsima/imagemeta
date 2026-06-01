@@ -14,6 +14,14 @@ XMP namespaces, and why each field matters for answer engines and search.
 | `rights` | `dc:rights` | `rdf:Alt` (x-default) | `http://purl.org/dc/elements/1.1/` |
 | `altText` | `Iptc4xmpCore:AltTextAccessibility` | `rdf:Alt` (x-default) | `http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/` |
 | `credit` | `photoshop:Credit` | simple text | `http://ns.adobe.com/photoshop/1.0/` |
+| `copyrightNotice` | `photoshop:Copyright` | simple text | `http://ns.adobe.com/photoshop/1.0/` |
+| `licenseUrl` | `xmpRights:WebStatement` | simple URI | `http://ns.adobe.com/xap/1.0/rights/` |
+| `licensor` | `plus:Licensor` (→ `plus:LicensorName` / `plus:LicensorURL`) | `rdf:Seq` of resources | `http://ns.useplus.org/ldf/xmp/1.0/` |
+
+The last three are the fields Google Images reads for the **Licensable** feature:
+`licenseUrl` + `licensor` (plus `creator`/`credit`/`copyrightNotice`) produce the
+license badge and the "Get this image on…" link. See
+[Image metadata in Google Images](https://developers.google.com/search/docs/appearance/structured-data/image-license-metadata).
 
 ## Why these structures
 

@@ -6,6 +6,15 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-06-01
+
+### Added
+- **IPTC/XMP licensing & rights fields** implementing Google's documented
+  *Licensable* image feature: `licenseUrl` (`xmpRights:WebStatement`), `licensor`
+  (IPTC PLUS `plus:Licensor` → `plus:LicensorURL`/`plus:LicensorName`), and
+  `copyrightNotice` (`photoshop:Copyright`). Round-trip across all 5 formats;
+  verified in ImageMagick. Closes #1.
+
 ## [1.0.2] - 2026-06-01
 
 ### Changed

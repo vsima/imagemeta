@@ -68,7 +68,7 @@ All four major web image formats are supported. An unrecognized format throws a 
 
 Being precise about what's spec-backed vs. forward-looking:
 
-- ✅ **Google Images reads embedded IPTC photo metadata** — creator, credit line, copyright, and licensing — and **shows it** in results (including the *Licensable* badge). Google **recommends embedding metadata in the file** (over sidecars) so it isn't lost. → [Image metadata in Google Images](https://developers.google.com/search/docs/appearance/structured-data/image-license-metadata) · [IPTC's quick guide](https://iptc.org/standards/photo-metadata/quick-guide-to-iptc-photo-metadata-and-google-images/)
+- ✅ **Google Images reads embedded IPTC photo metadata** — creator, credit line, copyright, and licensing — and **shows it** in results (including the *Licensable* badge). Google **recommends embedding metadata in the file** (over sidecars) so it isn't lost. → [Image metadata in Google Images](https://developers.google.com/search/docs/appearance/structured-data/image-license-metadata) · [IPTC's quick guide](https://iptc.org/standards/photo-metadata/quick-guide-to-iptc-photo-metadata-and-google-images/) **`aeo-image` writes exactly these fields** — `creator`, `credit`, `copyrightNotice`, `licenseUrl` (`xmpRights:WebStatement`), and `licensor` (IPTC PLUS `plus:Licensor`).
 - ℹ️ **For image *understanding/ranking*, Google primarily uses the HTML `alt` attribute**, page context, and computer vision — not embedded metadata. → [Image SEO best practices](https://developers.google.com/search/docs/appearance/google-images). So embedding alt text in the file **complements** (doesn't replace) your HTML `alt`; its value is durability, portability, accessibility, and attribution.
 - 🔭 **AI answer engines reading embedded metadata** is plausible and increasingly likely as they consume files directly, but is **not a published spec** today. Treat it as forward-looking.
 
@@ -147,10 +147,13 @@ detectFormat(buf); // "webp" | "jpeg" | "png" | "avif" | "heic" | "unknown"
 | `keywords` | `string[]` | `dc:subject` (rdf:Bag) |
 | `creator` | `string` | `dc:creator` (rdf:Seq) |
 | `rights` | `string` | `dc:rights` (x-default) |
-| `altText` | `string` | `Iptc4xmpCore:AltTextAccessibility` — *the field Google reads* |
+| `altText` | `string` | `Iptc4xmpCore:AltTextAccessibility` |
 | `credit` | `string` | `photoshop:Credit` |
+| `copyrightNotice` | `string` | `photoshop:Copyright` |
+| `licenseUrl` | `string` | `xmpRights:WebStatement` — *Google Licensable* |
+| `licensor` | `{ url, name? }` | IPTC PLUS `plus:Licensor` — *Google "Get this image" link* |
 
-All functions return a **new** buffer and never mutate the input. See [`docs/xmp-fields.md`](docs/xmp-fields.md) for the complete field/namespace reference and AEO rationale.
+The last three implement the fields Google Images reads for the **Licensable** badge and license link. All functions return a **new** buffer and never mutate the input. See [`docs/xmp-fields.md`](docs/xmp-fields.md) for the complete field/namespace reference and AEO rationale.
 
 ## How it works
 

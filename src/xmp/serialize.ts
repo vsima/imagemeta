@@ -16,6 +16,7 @@ const NS = {
   xmpRights: "http://ns.adobe.com/xap/1.0/rights/",
   photoshop: "http://ns.adobe.com/photoshop/1.0/",
   Iptc4xmpCore: "http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/",
+  plus: "http://ns.useplus.org/ldf/xmp/1.0/",
 } as const;
 
 function esc(value: string): string {
@@ -53,6 +54,27 @@ function seq(tag: string, values: string[]): string {
   return `   <${tag}>\n    <rdf:Seq>\n${items}    </rdf:Seq>\n   </${tag}>\n`;
 }
 
+/**
+ * The IPTC PLUS Licensor: a structured rdf:Seq of licensor entries, each a
+ * resource with plus:LicensorName / plus:LicensorURL. Google reads LicensorURL
+ * for the "Get this image on…" link.
+ */
+function licensorSeq(url: string, name?: string): string {
+  const nameLine = name
+    ? `       <plus:LicensorName>${esc(name)}</plus:LicensorName>\n`
+    : "";
+  return (
+    `   <plus:Licensor>\n` +
+    `    <rdf:Seq>\n` +
+    `     <rdf:li rdf:parseType="Resource">\n` +
+    nameLine +
+    `       <plus:LicensorURL>${esc(url)}</plus:LicensorURL>\n` +
+    `     </rdf:li>\n` +
+    `    </rdf:Seq>\n` +
+    `   </plus:Licensor>\n`
+  );
+}
+
 export function serializeXmp(meta: ImageMetadata): string {
   const props: string[] = [];
 
@@ -65,6 +87,16 @@ export function serializeXmp(meta: ImageMetadata): string {
     props.push(altLang("Iptc4xmpCore:AltTextAccessibility", meta.altText));
   if (meta.credit)
     props.push(`   <photoshop:Credit>${esc(meta.credit)}</photoshop:Credit>\n`);
+  if (meta.copyrightNotice)
+    props.push(
+      `   <photoshop:Copyright>${esc(meta.copyrightNotice)}</photoshop:Copyright>\n`,
+    );
+  if (meta.licenseUrl)
+    props.push(
+      `   <xmpRights:WebStatement>${esc(meta.licenseUrl)}</xmpRights:WebStatement>\n`,
+    );
+  if (meta.licensor?.url)
+    props.push(licensorSeq(meta.licensor.url, meta.licensor.name));
 
   const xmlns = Object.entries(NS)
     .map(([prefix, uri]) => `    xmlns:${prefix}="${uri}"`)
