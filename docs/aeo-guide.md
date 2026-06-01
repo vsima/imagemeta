@@ -15,7 +15,16 @@ not in the file. When an image is:
 - downloaded, re-shared, or hot-linked,
 
 …the embedded XMP travels **with the file**. It's the durable, portable
-description of what the image is. Answer engines and image pipelines read it.
+description of what the image is.
+
+> **What's spec-backed vs. forward-looking.** [Google Images reads embedded IPTC
+> metadata](https://developers.google.com/search/docs/appearance/structured-data/image-license-metadata)
+> (creator, credit, copyright, license) and **recommends embedding it**; see also
+> [IPTC's guide](https://iptc.org/standards/photo-metadata/quick-guide-to-iptc-photo-metadata-and-google-images/).
+> For image *ranking*, Google uses the [HTML `alt` attribute](https://developers.google.com/search/docs/appearance/google-images)
+> and page context — embedded alt **complements** it (durability/accessibility),
+> not replaces it. AI answer engines consuming embedded metadata is **plausible
+> but not yet a documented spec** — treat that upside as a bet, not a guarantee.
 
 ## What to write
 

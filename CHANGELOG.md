@@ -6,6 +6,16 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-06-01
+
+### Changed
+- Docs accuracy: reframed claims around what's spec-backed. Added a "What Google
+  actually documents" section citing Google's image-metadata/licensing docs and
+  IPTC's guide. Clarified that Google Images reads & recommends embedding IPTC
+  creator/credit/license metadata, that HTML `alt` (not embedded metadata) drives
+  image ranking, and that AI-engine consumption of embedded metadata is
+  forward-looking. No code changes.
+
 ## [1.0.1] - 2026-05-31
 
 ### Changed

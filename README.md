@@ -1,6 +1,6 @@
 # aeo-image
 
-> Write descriptive metadata — captions, keywords, alt text — into **WebP, AVIF, HEIC, JPEG & PNG** so AI answer engines (ChatGPT, Perplexity, Google AI Overviews) and search can read your images. The only pure-JS, **zero-dependency** library that writes XMP to AVIF/HEIC. **Byte-preserving** (never re-encodes). Runs on Node, Bun, Deno & edge.
+> Write descriptive + rights metadata — captions, keywords, alt text, creator, license — into **WebP, AVIF, HEIC, JPEG & PNG** so your images are **self-describing**: Google Images reads embedded IPTC metadata ([and recommends embedding it](https://developers.google.com/search/docs/appearance/structured-data/image-license-metadata)), and the description travels with the file as images get downloaded, indexed, and ingested by AI pipelines. The only pure-JS, **zero-dependency** library that writes XMP to AVIF/HEIC. **Byte-preserving** (never re-encodes). Runs on Node, Bun, Deno & edge.
 
 [![CI](https://github.com/vsima/aeo-image/actions/workflows/ci.yml/badge.svg)](https://github.com/vsima/aeo-image/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/aeo-image.svg)](https://www.npmjs.com/package/aeo-image)
@@ -30,7 +30,7 @@ The image pixels are **never re-encoded**. Only the metadata block is spliced in
 
 ## Why this exists
 
-Answer engines (ChatGPT, Perplexity, Google AI Overviews) and image search read **descriptive metadata** — captions, keywords, alt text — embedded directly in image files. That metadata lives in **XMP**, an XML packet inside the container.
+Metadata embedded **inside** an image file travels with it — when the file is downloaded, hot-linked, indexed by image search, or ingested by an AI pipeline as a file, the page's HTML context is gone but the embedded description, attribution, and license remain. That metadata lives in **XMP** (and IPTC), a packet inside the container. See [What Google actually documents](#what-google-actually-documents) below for the evidence-backed specifics.
 
 Today, writing XMP into modern web image formats from JavaScript means one of:
 
@@ -63,6 +63,16 @@ Today, writing XMP into modern web image formats from JavaScript means one of:
 | **PNG** | ✅ | ✅ | Implemented & tested (standard `iTXt`, CRC-correct) |
 
 All four major web image formats are supported. An unrecognized format throws a typed `UnsupportedFormatError` rather than risking silent corruption. See [`docs/roadmap.md`](docs/roadmap.md).
+
+## What Google actually documents
+
+Being precise about what's spec-backed vs. forward-looking:
+
+- ✅ **Google Images reads embedded IPTC photo metadata** — creator, credit line, copyright, and licensing — and **shows it** in results (including the *Licensable* badge). Google **recommends embedding metadata in the file** (over sidecars) so it isn't lost. → [Image metadata in Google Images](https://developers.google.com/search/docs/appearance/structured-data/image-license-metadata) · [IPTC's quick guide](https://iptc.org/standards/photo-metadata/quick-guide-to-iptc-photo-metadata-and-google-images/)
+- ℹ️ **For image *understanding/ranking*, Google primarily uses the HTML `alt` attribute**, page context, and computer vision — not embedded metadata. → [Image SEO best practices](https://developers.google.com/search/docs/appearance/google-images). So embedding alt text in the file **complements** (doesn't replace) your HTML `alt`; its value is durability, portability, accessibility, and attribution.
+- 🔭 **AI answer engines reading embedded metadata** is plausible and increasingly likely as they consume files directly, but is **not a published spec** today. Treat it as forward-looking.
+
+In short: the **documented, here-today** win is portable, machine-readable **attribution + licensing** (which Google reads and recommends embedding) plus accessibility; the AI-search upside is a bet on where file-level metadata is heading.
 
 ## Install
 
